@@ -1,0 +1,16 @@
+sudo: false
+
+language: java
+
+jdk: oraclejdk8
+
+cache:
+  directories:
+  - $HOME/.m2
+
+install: true
+
+script:
+ - cd demo-spring-testing
+ - ./mvnw clean verify
+
