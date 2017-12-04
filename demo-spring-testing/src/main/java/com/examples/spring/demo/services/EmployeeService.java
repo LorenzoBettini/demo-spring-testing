@@ -1,5 +1,6 @@
 package com.examples.spring.demo.services;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,9 @@ public class EmployeeService {
 	}
 
 	public Employee getMaxSalariedEmployee() {
-		Employee emp = null;
 		List<Employee> employees = employeeRepository.findAll();
-		// TODO: loop through employees and find max salaried emp
-		return emp;
+		return employees.stream()
+				.max(Comparator.comparing(Employee::getSalary))
+				.orElse(null);
 	}
 }
