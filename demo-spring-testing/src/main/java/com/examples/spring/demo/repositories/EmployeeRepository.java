@@ -8,4 +8,6 @@ public interface EmployeeRepository {
 
 	List<Employee> findAll();
 
+	Employee findById(long id);
+
 }

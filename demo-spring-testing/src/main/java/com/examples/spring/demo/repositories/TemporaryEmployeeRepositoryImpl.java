@@ -18,4 +18,9 @@ public class TemporaryEmployeeRepositoryImpl implements EmployeeRepository {
 		return null;
 	}
 
+	@Override
+	public Employee findById(long id) {
+		return null;
+	}
+
 }
