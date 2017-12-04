@@ -3,8 +3,8 @@ package com.examples.spring.demo.controllers;
 import static org.hamcrest.CoreMatchers.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.Arrays;
 
@@ -66,7 +66,8 @@ public class EmployeeRestControllerTest {
 	public void testFindByIdWithNotFoundEmployee() throws Exception {
 		this.mvc.perform(get("/api/employees/1")
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+			.andExpect(content().string(containsString("")));
 		verify(employeeRepository, times(1)).findById(1);
 	}
 
