@@ -13,4 +13,8 @@ public class EmployeeRepository {
 		return null;
 	}
 
+	public Employee findOne(long id) {
+		return null;
+	}
+
 }
