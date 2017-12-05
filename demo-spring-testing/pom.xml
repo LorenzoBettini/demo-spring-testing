@@ -22,6 +22,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
+    <jacoco.version>0.7.9</jacoco.version>
   </properties>
 
   <dependencies>
@@ -102,4 +103,56 @@
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <id>jacoco</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${jacoco.version}</version>
+            <configuration>
+              <excludes>
+                <exclude>**/*Application.*</exclude>
+              </excludes>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <!-- binds by default to the phase "initialize" -->
+                  <goal>prepare-agent</goal>
+                  <!-- binds by default to the phase "pre-integration-test" -->
+                  <goal>prepare-agent-integration</goal>
+                  <!-- binds by default to the phase "verify" -->
+                  <goal>report</goal>
+                  <goal>report-integration</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+        <pluginManagement>
+          <plugins>
+            <!-- You must run coveralls:report explicitly -->
+            <plugin>
+              <groupId>org.eluder.coveralls</groupId>
+              <artifactId>coveralls-maven-plugin</artifactId>
+              <version>4.3.0</version>
+              <configuration>
+                <jacocoReports>
+                  <!-- by default Jacoco generates its report here -->
+                  <jacocoReport>${project.reporting.outputDirectory}/jacoco/jacoco.xml</jacocoReport>
+                  <jacocoReport>${project.reporting.outputDirectory}/jacoco-it/jacoco.xml</jacocoReport>
+                </jacocoReports>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>
 </project>
