@@ -47,4 +47,42 @@ public class EmployeeServiceWithMockitoTest {
 			isEqualTo("second");
 		verify(employeeRepository).findAll();
 	}
+
+	@Test
+	public void test_getAllEmployees_withEmployees() {
+		Employee employee1 = new Employee(1, "first", 1000);
+		Employee employee2 = new Employee(2, "second", 5000);
+		given(employeeRepository.findAll()).
+			willReturn(Arrays.asList(
+				employee1,
+				employee2
+			));
+		assertThat(employeeService.getAllEmployees()).
+			containsExactly(employee1, employee2);
+		verify(employeeRepository).findAll();
+	}
+
+	@Test
+	public void test_getAllEmployees_empty() {
+		assertThat(employeeService.getAllEmployees()).
+			isEmpty();
+		verify(employeeRepository).findAll();
+	}
+
+	@Test
+	public void test_getEmployeeById_found() {
+		Employee employee = new Employee(1, "employee", 1000);
+		given(employeeRepository.findOne(1))
+			.willReturn(employee);
+		assertThat(employeeService.getEmployeeById(1))
+			.isSameAs(employee);
+		verify(employeeRepository).findOne(1);
+	}
+
+	@Test
+	public void test_getEmployeeById_notFound() {
+		assertThat(employeeService.getEmployeeById(1))
+			.isNull();
+		verify(employeeRepository).findOne(1);
+	}
 }
