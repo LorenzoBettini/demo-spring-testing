@@ -13,8 +13,12 @@ import com.examples.spring.demo.services.EmployeeService;
 @RestController
 public class EmployeeRestController {
 
-	@Autowired
 	private EmployeeService employeeService;
+
+	@Autowired
+	public EmployeeRestController(EmployeeService employeeService) {
+		this.employeeService = employeeService;
+	}
 
 	@GetMapping("/api/employees")
 	public List<Employee> allEmployees() {
