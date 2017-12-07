@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.examples.spring.demo.model.Employee;
 import com.examples.spring.demo.services.EmployeeService;
@@ -27,5 +28,14 @@ public class EmployeeWebController {
 		model.addAttribute("message",
 			allEmployees.isEmpty() ? "No employee" : "");
 		return "index";
+	}
+
+	@GetMapping("/edit/{id}")
+	public String editEmployee(@PathVariable long id, Model model) {
+		Employee employeeById = employeeService.getEmployeeById(id);
+		model.addAttribute("employee", employeeById);
+		model.addAttribute("message",
+			employeeById == null ? "No employee found with id: " + id : "");
+		return "edit";
 	}
 }

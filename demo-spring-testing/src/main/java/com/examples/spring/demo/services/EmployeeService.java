@@ -13,4 +13,8 @@ public class EmployeeService {
 		return null;
 	}
 
+	public Employee getEmployeeById(long i) {
+		return null;
+	}
+
 }
