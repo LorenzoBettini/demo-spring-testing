@@ -1,11 +1,13 @@
 package com.examples.spring.demo.controllers;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +48,16 @@ public class EmployeeWebControllerTest {
 		mvc.perform(get("/"))
 			.andExpect(view().name("index"))
 			.andExpect(model().attribute("employees", new ArrayList<Employee>()));
+		verify(employeeService).getAllEmployees();
+	}
+
+	@Test
+	public void testNotEmptyEmployeeList() throws Exception {
+		List<Employee> employees = Arrays.asList(new Employee(1, "test", 1000));
+		when(employeeService.getAllEmployees()).thenReturn(employees);
+		mvc.perform(get("/"))
+			.andExpect(view().name("index"))
+			.andExpect(model().attribute("employees", employees));
 		verify(employeeService).getAllEmployees();
 	}
 }
