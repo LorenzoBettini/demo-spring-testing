@@ -1,6 +1,8 @@
 package com.examples.spring.demo.controllers;
 
-import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -61,5 +63,25 @@ public class EmployeeWebControllerTest {
 			.andExpect(model().attribute("employees", employees))
 			.andExpect(model().attribute("message", ""));
 		verify(employeeService).getAllEmployees();
+	}
+
+	@Test
+	public void testSingleEmployee() throws Exception {
+		Employee employee = new Employee(1, "test", 1000);
+		when(employeeService.getEmployeeById(1)).thenReturn(employee);
+		mvc.perform(get("/edit/1"))
+			.andExpect(view().name("edit"))
+			.andExpect(model().attribute("employee", employee))
+			.andExpect(model().attribute("message", ""));
+		verify(employeeService).getEmployeeById(1);
+	}
+
+	@Test
+	public void testSingleEmployeeNotFound() throws Exception {
+		mvc.perform(get("/edit/1"))
+			.andExpect(view().name("edit"))
+			.andExpect(model().attribute("employee", nullValue()))
+			.andExpect(model().attribute("message", "No employee found with id: 1"));
+		verify(employeeService).getEmployeeById(1);
 	}
 }
