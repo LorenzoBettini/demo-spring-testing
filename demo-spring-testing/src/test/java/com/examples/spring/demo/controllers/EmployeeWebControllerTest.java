@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.ArrayList;
@@ -83,5 +84,15 @@ public class EmployeeWebControllerTest {
 			.andExpect(model().attribute("employee", nullValue()))
 			.andExpect(model().attribute("message", "No employee found with id: 1"));
 		verify(employeeService).getEmployeeById(1);
+	}
+
+	@Test
+	public void testPostEmployee() throws Exception {
+		Employee employee = new Employee(0, "created", 1000);
+		mvc.perform(post("/save")
+				.param("name", employee.getName())
+				.param("salary", ""+employee.getSalary()))
+			.andExpect(view().name("index")); // go back to the main page
+		verify(employeeService).saveEmployee(employee);
 	}
 }
