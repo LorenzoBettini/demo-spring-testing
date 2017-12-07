@@ -17,4 +17,8 @@ public class EmployeeService {
 		return null;
 	}
 
+	public void saveEmployee(Employee employee) {
+		
+	}
+
 }

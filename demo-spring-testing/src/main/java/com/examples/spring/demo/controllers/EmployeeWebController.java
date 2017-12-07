@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.examples.spring.demo.model.Employee;
 import com.examples.spring.demo.services.EmployeeService;
@@ -37,5 +38,11 @@ public class EmployeeWebController {
 		model.addAttribute("message",
 			employeeById == null ? "No employee found with id: " + id : "");
 		return "edit";
+	}
+
+	@PostMapping("/save")
+	public String saveEmployee(Employee employee) {
+		employeeService.saveEmployee(employee);
+		return "index";
 	}
 }
