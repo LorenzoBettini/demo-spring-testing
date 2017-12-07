@@ -47,7 +47,8 @@ public class EmployeeWebControllerTest {
 	public void testEmptyEmployeeList() throws Exception {
 		mvc.perform(get("/"))
 			.andExpect(view().name("index"))
-			.andExpect(model().attribute("employees", new ArrayList<Employee>()));
+			.andExpect(model().attribute("employees", new ArrayList<Employee>()))
+			.andExpect(model().attribute("message", "No employee"));
 		verify(employeeService).getAllEmployees();
 	}
 
@@ -57,7 +58,8 @@ public class EmployeeWebControllerTest {
 		when(employeeService.getAllEmployees()).thenReturn(employees);
 		mvc.perform(get("/"))
 			.andExpect(view().name("index"))
-			.andExpect(model().attribute("employees", employees));
+			.andExpect(model().attribute("employees", employees))
+			.andExpect(model().attribute("message", ""));
 		verify(employeeService).getAllEmployees();
 	}
 }
