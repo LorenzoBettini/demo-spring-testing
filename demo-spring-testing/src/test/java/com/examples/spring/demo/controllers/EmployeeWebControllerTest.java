@@ -5,6 +5,8 @@ import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.examples.spring.demo.model.Employee;
 import com.examples.spring.demo.services.EmployeeService;
 
 @RunWith(SpringRunner.class)
@@ -40,9 +43,9 @@ public class EmployeeWebControllerTest {
 
 	@Test
 	public void testEmptyEmployeeList() throws Exception {
-		assertViewName(mvc.perform(get("/"))
-			.andReturn()
-			.getModelAndView(), "index");
+		mvc.perform(get("/"))
+			.andExpect(view().name("index"))
+			.andExpect(model().attribute("employees", new ArrayList<Employee>()));
 		verify(employeeService).getAllEmployees();
 	}
 }
