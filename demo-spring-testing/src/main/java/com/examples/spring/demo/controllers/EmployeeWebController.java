@@ -43,6 +43,6 @@ public class EmployeeWebController {
 	@PostMapping("/save")
 	public String saveEmployee(Employee employee) {
 		employeeService.saveEmployee(employee);
-		return "index";
+		return "redirect:/";
 	}
 }

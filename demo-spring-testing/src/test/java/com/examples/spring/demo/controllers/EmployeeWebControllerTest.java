@@ -92,7 +92,7 @@ public class EmployeeWebControllerTest {
 		mvc.perform(post("/save")
 				.param("name", employee.getName())
 				.param("salary", ""+employee.getSalary()))
-			.andExpect(view().name("index")); // go back to the main page
+			.andExpect(view().name("redirect:/")); // go back to the main page
 		verify(employeeService).saveEmployee(employee);
 	}
 }
