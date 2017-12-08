@@ -16,7 +16,7 @@ import org.junit.Test;
 import com.examples.spring.demo.model.Employee;
 import com.examples.spring.demo.services.EmployeeService;
 
-public class EmployeeControllerRestAssuredTest {
+public class EmployeeRestControllerRestAssuredTest {
 
 	private EmployeeService employeeService;
 
