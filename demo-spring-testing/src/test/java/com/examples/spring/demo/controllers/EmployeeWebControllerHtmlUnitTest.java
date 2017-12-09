@@ -53,4 +53,11 @@ public class EmployeeWebControllerHtmlUnitTest {
 			"2	test2	2000"
 		);
 	}
+
+	@Test
+	public void testEditNonExistentEmployee() throws Exception {
+		HtmlPage page = this.webClient.getPage("/edit/1");
+		assertThat(page.getBody().getTextContent())
+			.contains("No employee found with id: 1");
+	}
 }
