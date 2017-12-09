@@ -1,28 +1,37 @@
 package com.examples.spring.demo.services;
 
-import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import com.examples.spring.demo.model.Employee;
 
+/**
+ * Temporary implementation just to make some manual checks.
+ * During the tests this will be mocked anyway.
+ */
 @Service
 public class EmployeeService {
 
+	private Map<Long, Employee> employees = new LinkedHashMap<>();
+
+	public EmployeeService() {
+		employees.put(1L, new Employee(1L, "John Doe", 1000));
+	}
+
 	public List<Employee> getAllEmployees() {
-		// just to have something to view
-		return Arrays.asList(
-			new Employee(1, "John Doe", 1000)
-		);
+		return new LinkedList<>(employees.values());
 	}
 
 	public Employee getEmployeeById(long i) {
-		return null;
+		return employees.get(i);
 	}
 
 	public void saveEmployee(Employee employee) {
-		
+		employees.put(employee.getId(), employee);
 	}
 
 }
