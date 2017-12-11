@@ -57,7 +57,7 @@ public class EmployeeWebControllerTest {
 
 	@Test
 	public void testNotEmptyEmployeeList() throws Exception {
-		List<Employee> employees = Arrays.asList(new Employee(1, "test", 1000));
+		List<Employee> employees = Arrays.asList(new Employee(1L, "test", 1000));
 		when(employeeService.getAllEmployees()).thenReturn(employees);
 		mvc.perform(get("/"))
 			.andExpect(view().name("index"))
@@ -68,7 +68,7 @@ public class EmployeeWebControllerTest {
 
 	@Test
 	public void testSingleEmployee() throws Exception {
-		Employee employee = new Employee(1, "test", 1000);
+		Employee employee = new Employee(1L, "test", 1000);
 		when(employeeService.getEmployeeById(1)).thenReturn(employee);
 		mvc.perform(get("/edit/1"))
 			.andExpect(view().name("edit"))
@@ -88,7 +88,7 @@ public class EmployeeWebControllerTest {
 
 	@Test
 	public void testPostEmployee() throws Exception {
-		Employee employee = new Employee(0, "created", 1000);
+		Employee employee = new Employee(0L, "created", 1000);
 		mvc.perform(post("/save")
 				.param("name", employee.getName())
 				.param("salary", ""+employee.getSalary()))

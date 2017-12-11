@@ -44,8 +44,8 @@ public class EmployeeWebControllerHtmlUnitTest {
 		when(employeeService.getAllEmployees())
 			.thenReturn(
 				Arrays.asList(
-					new Employee(1, "test1", 1000),
-					new Employee(2, "test2", 2000)));
+					new Employee(1L, "test1", 1000),
+					new Employee(2L, "test2", 2000)));
 		HtmlPage page = this.webClient.getPage("/");
 		assertThat(page.getBody().getTextContent())
 			.doesNotContain("No employee");
@@ -68,7 +68,7 @@ public class EmployeeWebControllerHtmlUnitTest {
 	public void testEditExistentEmployee() throws Exception {
 		when(employeeService.getEmployeeById(1))
 			.thenReturn(
-				new Employee(1, "test1", 1000));
+				new Employee(1L, "test1", 1000));
 		HtmlPage page = this.webClient.getPage("/edit/1");
 		assertThat(page.getBody().getTextContent())
 			.doesNotContain("No employee found with id: 1");
@@ -81,7 +81,7 @@ public class EmployeeWebControllerHtmlUnitTest {
 		form.getInputByValue("1000").setValueAttribute("2000");
 
 		// this is the expected modifies employee
-		Employee expectedSave = new Employee(1, "new test1", 2000);
+		Employee expectedSave = new Employee(1L, "new test1", 2000);
 		// simulates that the modified employee is in the db
 		when(employeeService.getAllEmployees())
 			.thenReturn(
