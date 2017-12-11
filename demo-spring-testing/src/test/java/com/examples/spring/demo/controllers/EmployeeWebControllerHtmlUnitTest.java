@@ -102,4 +102,46 @@ public class EmployeeWebControllerHtmlUnitTest {
 		);
 	}
 
+	@Test
+	public void testNewEmployee() throws Exception {
+		HtmlPage page = this.webClient.getPage("/new");
+
+		// Get the form that we are dealing with
+		final HtmlForm form = page.getFormByName("employee_form");
+		// retrieve fields by their names
+		// and then change their values
+		form.getInputByName("name").setValueAttribute("new test1");
+		form.getInputByName("salary").setValueAttribute("2000");
+
+		// this is the expected modifies employee
+		// since the service is mocked, the id null is considered valid
+		// in the real implementation, the service will delegate to
+		// the repository which will create a new record and assign
+		// a valid id > 0
+		Employee expectedSave = new Employee(null, "new test1", 2000);
+		// simulates that the modified employee is in the db
+		when(employeeService.getAllEmployees())
+			.thenReturn(
+				Arrays.asList(expectedSave));
+
+		// Now submit the form by clicking the button and get back the second page.
+		final HtmlButton button = form.getButtonByName("btn_submit");
+		final HtmlPage page2 = button.click();
+
+		// verify that the employee is passed to the service
+		// for saving; we expect the id to be null
+		// since in the view the hidden id was null as well;
+		// it will be automatically assigned by the persistence layer
+		// which is mocked in this test, thus not implemented
+		verify(employeeService).saveEmployee(expectedSave);
+
+		// verify that the modified employee is in the table
+		HtmlTable table = page2.getHtmlElementById("employee_table");
+		// in this test the id is null since the service is mocked
+		assertThat(table.asText()).isEqualTo(
+			"ID	Name	Salary\n" + 
+			"	new test1	2000"
+		);
+	}
+
 }
