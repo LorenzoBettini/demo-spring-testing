@@ -87,9 +87,20 @@ public class EmployeeWebControllerTest {
 	}
 
 	@Test
-	public void testPostEmployee() throws Exception {
-		Employee employee = new Employee(0L, "created", 1000);
+	public void testPostEmployeeWithoutId() throws Exception {
+		Employee employee = new Employee(null, "created", 1000);
 		mvc.perform(post("/save")
+				.param("name", employee.getName())
+				.param("salary", ""+employee.getSalary()))
+			.andExpect(view().name("redirect:/")); // go back to the main page
+		verify(employeeService).saveEmployee(employee);
+	}
+
+	@Test
+	public void testPostEmployeeWithId() throws Exception {
+		Employee employee = new Employee(1L, "created", 1000);
+		mvc.perform(post("/save")
+				.param("id", employee.getId().toString())
 				.param("name", employee.getName())
 				.param("salary", ""+employee.getSalary()))
 			.andExpect(view().name("redirect:/")); // go back to the main page
