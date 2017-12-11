@@ -31,6 +31,11 @@ public class EmployeeService {
 	}
 
 	public void saveEmployee(Employee employee) {
+		// simulates the automatic assignment of id if null
+		// just for experimenting with the web interface
+		if (employee.getId() == null) {
+			employee.setId(employees.size()+1L);
+		}
 		employees.put(employee.getId(), employee);
 	}
 
