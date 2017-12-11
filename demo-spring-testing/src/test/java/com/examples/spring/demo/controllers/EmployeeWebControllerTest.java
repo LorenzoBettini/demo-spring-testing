@@ -2,6 +2,7 @@ package com.examples.spring.demo.controllers;
 
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -105,5 +106,14 @@ public class EmployeeWebControllerTest {
 				.param("salary", ""+employee.getSalary()))
 			.andExpect(view().name("redirect:/")); // go back to the main page
 		verify(employeeService).saveEmployee(employee);
+	}
+
+	@Test
+	public void testNewEmployee() throws Exception {
+		mvc.perform(get("/new"))
+			.andExpect(view().name("edit"))
+			.andExpect(model().attribute("employee", new Employee()))
+			.andExpect(model().attribute("message", ""));
+		verifyZeroInteractions(employeeService);
 	}
 }
