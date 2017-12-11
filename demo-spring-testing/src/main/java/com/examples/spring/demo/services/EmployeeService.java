@@ -39,4 +39,8 @@ public class EmployeeService {
 		employees.put(employee.getId(), employee);
 	}
 
+	public void deleteAll() {
+		employees.clear();
+	}
+
 }
