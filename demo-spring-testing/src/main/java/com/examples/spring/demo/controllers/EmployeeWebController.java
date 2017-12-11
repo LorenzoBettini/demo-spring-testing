@@ -40,6 +40,14 @@ public class EmployeeWebController {
 		return "edit";
 	}
 
+	@GetMapping("/new")
+	public String newEmployee(Model model) {
+		Employee employee = new Employee();
+		model.addAttribute("employee", employee);
+		model.addAttribute("message", "");
+		return "edit";
+	}
+
 	@PostMapping("/save")
 	public String saveEmployee(Employee employee) {
 		employeeService.saveEmployee(employee);
