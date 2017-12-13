@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.examples.spring.demo.controllers.webdriver.pages.AbstractPage;
 import com.examples.spring.demo.controllers.webdriver.pages.HomePage;
+import com.examples.spring.demo.model.Employee;
 import com.examples.spring.demo.services.EmployeeService;
 
 import cucumber.api.java.Before;
@@ -71,5 +72,18 @@ public class EmployeeWebControllerCucumberSteps {
 	@Then("^A message \"([^\"]*)\" must be shown$")
 	public void aMessageMustBeShown(String expectedMessage) throws Throwable {
 		assertThat(homePage.getBody()).contains(expectedMessage);
+	}
+
+	@Given("^Some employees are in the database$")
+	public void someEmployeesAreInTheDatabase() throws Throwable {
+		employeeService.saveEmployee(new Employee(1L, "test1", 1000));
+		employeeService.saveEmployee(new Employee(2L, "test2", 2000));
+	}
+
+	@Then("^A table must show the employees$")
+	public void aTableMustShowTheEmployees() throws Throwable {
+		assertThat(homePage.getEmployeeTableAsString()).isEqualTo(
+			"ID Name Salary 1 test1 1000 2 test2 2000"
+		);
 	}
 }
