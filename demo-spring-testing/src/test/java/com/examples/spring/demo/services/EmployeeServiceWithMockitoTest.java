@@ -85,4 +85,10 @@ public class EmployeeServiceWithMockitoTest {
 			.isNull();
 		verify(employeeRepository).findOne(1L);
 	}
+
+	@Test
+	public void test_deleteAll() {
+		employeeService.deleteAll();
+		verify(employeeRepository).deleteAll();
+	}
 }
