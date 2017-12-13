@@ -125,4 +125,15 @@ public class EmployeeWebControllerCucumberSteps {
 			.contains(messagePart + id);
 	}
 
+	@And("^The Employee with id \"([^\"]*)\" exists in the database$")
+	public void theEmployeeWithIdExistsInTheDatabase(String id) throws Throwable {
+		employeeService.saveEmployee(new Employee(Long.parseLong(id), "test1", 1000));
+	}
+
+	@And("^A table must show the modified Employee \"([^\"]*)\"$")
+	public void aTableMustShowTheModifiedEmployee(String expectedRepresentation) throws Throwable {
+		assertThat(homePage.getEmployeeTableAsString()).
+			contains(expectedRepresentation);
+	}
+
 }
