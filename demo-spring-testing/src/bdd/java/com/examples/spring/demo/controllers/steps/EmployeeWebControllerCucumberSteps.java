@@ -15,11 +15,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.examples.spring.demo.controllers.webdriver.pages.AbstractPage;
+import com.examples.spring.demo.controllers.webdriver.pages.EditPage;
 import com.examples.spring.demo.controllers.webdriver.pages.HomePage;
 import com.examples.spring.demo.model.Employee;
 import com.examples.spring.demo.services.EmployeeService;
 
 import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -38,6 +40,10 @@ public class EmployeeWebControllerCucumberSteps {
 	private int port;
 
 	private HomePage homePage;
+
+	private EditPage editPage;
+
+	private AbstractPage redirectedPage;
 
 	static final Logger LOGGER = Logger.getLogger(EmployeeWebControllerCucumberSteps.class);
 
@@ -86,4 +92,26 @@ public class EmployeeWebControllerCucumberSteps {
 			"ID Name Salary 1 test1 1000 2 test2 2000"
 		);
 	}
+
+	@When("^The User navigates to \"([^\"]*)\" page$")
+	public void theUserNavigatesToPage(String newPage) throws Throwable {
+		editPage = EditPage.to(webDriver);
+	}
+
+	@And("^Enters Employee name \"([^\"]*)\" and salary \"([^\"]*)\" and presses click$")
+	public void entersEmployeeNameAndSalaryAndPressesClick(String name, String salary) throws Throwable {
+		redirectedPage = editPage.submitForm(HomePage.class, name, Integer.parseInt(salary));
+	}
+
+	@Then("^The User is redirected to Home Page$")
+	public void theUserIsRedirectedToHomePage() throws Throwable {
+		assertThat(redirectedPage).isInstanceOf(HomePage.class);
+	}
+
+	@And("^A table must show the added Employee with name \"([^\"]*)\", salary \"([^\"]*)\" and id is positive$")
+	public void aTableMustShowTheAddedEmployeeWithNameSalaryAndIdIsPositive(String name, String salary) throws Throwable {
+		assertThat(homePage.getEmployeeTableAsString()).
+			matches(".*([1-9][0-9]*) " + name + " " + salary);
+	}
+
 }
