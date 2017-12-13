@@ -39,9 +39,9 @@ public class EmployeeServiceWithMockitoTest {
 	public void test_getMaxSalariedEmployee_withEmployees() {
 		given(employeeRepository.findAll()).
 			willReturn(Arrays.asList(
-				new Employee(1, "first", 1000),
-				new Employee(2, "second", 5000),
-				new Employee(3, "third", 2000)
+				new Employee(1L, "first", 1000),
+				new Employee(2L, "second", 5000),
+				new Employee(3L, "third", 2000)
 			));
 		assertThat(employeeService.getMaxSalariedEmployee().getName()).
 			isEqualTo("second");
@@ -50,8 +50,8 @@ public class EmployeeServiceWithMockitoTest {
 
 	@Test
 	public void test_getAllEmployees_withEmployees() {
-		Employee employee1 = new Employee(1, "first", 1000);
-		Employee employee2 = new Employee(2, "second", 5000);
+		Employee employee1 = new Employee(1L, "first", 1000);
+		Employee employee2 = new Employee(2L, "second", 5000);
 		given(employeeRepository.findAll()).
 			willReturn(Arrays.asList(
 				employee1,
@@ -71,18 +71,18 @@ public class EmployeeServiceWithMockitoTest {
 
 	@Test
 	public void test_getEmployeeById_found() {
-		Employee employee = new Employee(1, "employee", 1000);
-		given(employeeRepository.findOne(1))
+		Employee employee = new Employee(1L, "employee", 1000);
+		given(employeeRepository.findOne(1L))
 			.willReturn(employee);
 		assertThat(employeeService.getEmployeeById(1))
 			.isSameAs(employee);
-		verify(employeeRepository).findOne(1);
+		verify(employeeRepository).findOne(1L);
 	}
 
 	@Test
 	public void test_getEmployeeById_notFound() {
 		assertThat(employeeService.getEmployeeById(1))
 			.isNull();
-		verify(employeeRepository).findOne(1);
+		verify(employeeRepository).findOne(1L);
 	}
 }

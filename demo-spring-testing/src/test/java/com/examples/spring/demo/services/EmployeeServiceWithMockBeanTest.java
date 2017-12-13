@@ -43,9 +43,9 @@ public class EmployeeServiceWithMockBeanTest {
 	public void test_getMaxSalariedEmployee_withEmployees() {
 		given(employeeRepository.findAll()).
 			willReturn(Arrays.asList(
-				new Employee(1, "first", 1000),
-				new Employee(2, "second", 5000),
-				new Employee(3, "third", 2000)
+				new Employee(1L, "first", 1000),
+				new Employee(2L, "second", 5000),
+				new Employee(3L, "third", 2000)
 			));
 		assertThat(employeeService.getMaxSalariedEmployee().getName()).
 			isEqualTo("second");
