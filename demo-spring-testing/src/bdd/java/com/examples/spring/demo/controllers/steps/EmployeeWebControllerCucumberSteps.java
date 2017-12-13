@@ -114,4 +114,15 @@ public class EmployeeWebControllerCucumberSteps {
 			matches(".*([1-9][0-9]*) " + name + " " + salary);
 	}
 
+	@When("^The User navigates to \"([^\"]*)\" page with id \"([^\"]*)\"$")
+	public void theUserNavigatesToPageWithId(String arg, String id) throws Throwable {
+		editPage = EditPage.to(webDriver, Long.parseLong(id));
+	}
+
+	@Then("^A message \"([^\"]*)\" \\+ \"([^\"]*)\" must be shown$")
+	public void aMessageMustBeShown(String messagePart, String id) throws Throwable {
+		assertThat(editPage.getBody())
+			.contains(messagePart + id);
+	}
+
 }
