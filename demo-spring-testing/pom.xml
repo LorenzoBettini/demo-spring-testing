@@ -23,6 +23,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
     <jacoco.version>0.7.9</jacoco.version>
+    <cucumber.version>1.2.5</cucumber.version>
   </properties>
 
   <dependencies>
@@ -87,6 +88,27 @@
       <artifactId>selenium-support</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-spring</artifactId>
+      <version>${cucumber.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <version>${cucumber.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>info.cukes</groupId>
+      <artifactId>cucumber-junit</artifactId>
+      <version>${cucumber.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -108,7 +130,22 @@
             <configuration>
               <sources>
                 <source>src/it/java</source>
+                <source>src/bdd/java</source>
               </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-test-resource</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>add-test-resource</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>src/bdd/resources</directory>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>
@@ -131,6 +168,18 @@
               <includes>
                 <include>**/*ApplicationTests.java</include>
                 <include>**/*IT.java</include>
+              </includes>
+            </configuration>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>bdd-tests</id>
+            <configuration>
+              <includes>
+                <include>**/*BDD.java</include>
               </includes>
             </configuration>
             <goals>
