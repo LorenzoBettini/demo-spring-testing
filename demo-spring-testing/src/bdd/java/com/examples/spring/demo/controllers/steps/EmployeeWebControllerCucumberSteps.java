@@ -2,6 +2,9 @@ package com.examples.spring.demo.controllers.steps;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -45,6 +48,8 @@ public class EmployeeWebControllerCucumberSteps {
 
 	private AbstractPage redirectedPage;
 
+	private List<Employee> savedEmployees;
+
 	static final Logger LOGGER = Logger.getLogger(EmployeeWebControllerCucumberSteps.class);
 
 	@TestConfiguration
@@ -62,6 +67,7 @@ public class EmployeeWebControllerCucumberSteps {
 	@Before
 	public void setup() {
 		AbstractPage.port = port;
+		savedEmployees = new ArrayList<>();
 		LOGGER.info("Port set: " + port);
 	}
 
@@ -82,14 +88,18 @@ public class EmployeeWebControllerCucumberSteps {
 
 	@Given("^Some employees are in the database$")
 	public void someEmployeesAreInTheDatabase() throws Throwable {
-		employeeService.saveEmployee(new Employee(1L, "test1", 1000));
-		employeeService.saveEmployee(new Employee(2L, "test2", 2000));
+		savedEmployees.add(employeeService.saveEmployee(new Employee(null, "test1", 1000)));
+		savedEmployees.add(employeeService.saveEmployee(new Employee(null, "test2", 2000)));
 	}
 
 	@Then("^A table must show the employees$")
 	public void aTableMustShowTheEmployees() throws Throwable {
 		assertThat(homePage.getEmployeeTableAsString()).isEqualTo(
-			"ID Name Salary 1 test1 1000 2 test2 2000"
+			"ID Name Salary "
+			+ savedEmployees.get(0).getId()
+			+ " test1 1000 "
+			+ savedEmployees.get(1).getId()
+			+ " test2 2000"
 		);
 	}
 
@@ -125,15 +135,21 @@ public class EmployeeWebControllerCucumberSteps {
 			.contains(messagePart + id);
 	}
 
-	@And("^The Employee with id \"([^\"]*)\" exists in the database$")
-	public void theEmployeeWithIdExistsInTheDatabase(String id) throws Throwable {
-		employeeService.saveEmployee(new Employee(Long.parseLong(id), "test1", 1000));
-	}
-
 	@And("^A table must show the modified Employee \"([^\"]*)\"$")
 	public void aTableMustShowTheModifiedEmployee(String expectedRepresentation) throws Throwable {
 		assertThat(homePage.getEmployeeTableAsString()).
-			contains(expectedRepresentation);
+			contains(savedEmployees.get(0).getId() + " " + expectedRepresentation);
+	}
+
+	@And("^An Employee exists in the database$")
+	public void anEmployeeExistsInTheDatabase() throws Throwable {
+		savedEmployees.add(employeeService.saveEmployee(new Employee(null, "test1", 1000)));
+	}
+
+	@When("^The User navigates to \"([^\"]*)\" page with the id of the existing Employee$")
+	public void theUserNavigatesToPageWithTheIdOfTheExistingEmployee(String arg1) throws Throwable {
+		editPage = EditPage.to(webDriver,
+			savedEmployees.get(0).getId());
 	}
 
 }

@@ -14,8 +14,8 @@ Scenario: Edit a non existent Employee
 
 Scenario: Edit an existent Employee
   Given The User is on Home Page
-  And The Employee with id "100" exists in the database
-  When The User navigates to "edit" page with id "100"
+  And An Employee exists in the database
+  When The User navigates to "edit" page with the id of the existing Employee
   And Enters Employee name "modified name" and salary "10000" and presses click
   Then The User is redirected to Home Page
-  And A table must show the modified Employee "100 modified name 10000"
+  And A table must show the modified Employee "modified name 10000"
