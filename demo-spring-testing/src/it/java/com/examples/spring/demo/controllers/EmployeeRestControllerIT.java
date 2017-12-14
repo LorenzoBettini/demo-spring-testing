@@ -1,4 +1,4 @@
-package com.examples.spring.demo.services;
+package com.examples.spring.demo.controllers;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
