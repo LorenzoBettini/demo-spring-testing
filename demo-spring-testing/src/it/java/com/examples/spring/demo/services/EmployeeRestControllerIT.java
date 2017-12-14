@@ -70,6 +70,8 @@ public class EmployeeRestControllerIT {
 				"salary[0]", equalTo(1000),
 				"name[1]", equalTo("second"),
 				"salary[1]", equalTo(5000),
+				// check that the list of integer ids in JSON response
+				// is equal to to the one of saved employees
 				"id",
 					equalTo(
 						saved.stream()
