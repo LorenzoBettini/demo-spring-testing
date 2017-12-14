@@ -50,7 +50,7 @@ public class EmployeeWebControllerHtmlUnitTest {
 		assertThat(page.getBody().getTextContent())
 			.doesNotContain("No employee");
 		HtmlTable table = page.getHtmlElementById("employee_table");
-		assertThat(table.asText()).isEqualTo(
+		assertThat(removeWindowsCR(table.asText())).isEqualTo(
 			"ID	Name	Salary\n" + 
 			"1	test1	1000\n" + 
 			"2	test2	2000"
@@ -96,7 +96,7 @@ public class EmployeeWebControllerHtmlUnitTest {
 
 		// verify that the modified employee is in the table
 		HtmlTable table = page2.getHtmlElementById("employee_table");
-		assertThat(table.asText()).isEqualTo(
+		assertThat(removeWindowsCR(table.asText())).isEqualTo(
 			"ID	Name	Salary\n" + 
 			"1	new test1	2000"
 		);
@@ -138,10 +138,14 @@ public class EmployeeWebControllerHtmlUnitTest {
 		// verify that the modified employee is in the table
 		HtmlTable table = page2.getHtmlElementById("employee_table");
 		// in this test the id is null since the service is mocked
-		assertThat(table.asText()).isEqualTo(
+		assertThat(removeWindowsCR(table.asText())).isEqualTo(
 			"ID	Name	Salary\n" + 
 			"	new test1	2000"
 		);
+	}
+
+	private String removeWindowsCR(String s) {
+		return s.replaceAll("\r", "");
 	}
 
 }
