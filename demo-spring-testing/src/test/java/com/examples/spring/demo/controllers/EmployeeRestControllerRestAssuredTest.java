@@ -3,6 +3,7 @@ package com.examples.spring.demo.controllers;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.standaloneSetup;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 
 import com.examples.spring.demo.model.Employee;
 import com.examples.spring.demo.services.EmployeeService;
@@ -74,6 +76,77 @@ public class EmployeeRestControllerRestAssuredTest {
 		verify(employeeService, times(1)).getEmployeeById(1);
 	}
 
-	// other tests similar to EmployeeRestControllerTest
+	@Test
+	public void testFindByIdWithNonExistingEmployee() throws Exception {
+		given().
+		when().
+			get("/api/employees/100").
+		then().
+			statusCode(200).
+			contentType(isEmptyOrNullString());
 
+		verify(employeeService, times(1)).getEmployeeById(100);
+	}
+
+	@Test
+	public void testNewEmployee() throws Exception {
+		given().
+			contentType(MediaType.APPLICATION_JSON_VALUE).
+			body(new Employee(null, "test", 1000)).
+		when().
+			post("/api/employees/new").
+		then().
+			statusCode(200);
+
+		verify(employeeService, times(1)).
+			saveEmployee(new Employee(null, "test", 1000));
+	}
+
+	@Test
+	public void testUpdateEmployee() throws Exception {
+		when(employeeService.getEmployeeById(1)).
+			thenReturn(new Employee(1L, "first", 100));
+		Employee updated = new Employee(1L, "test", 1000);
+
+		given().
+			contentType(MediaType.APPLICATION_JSON_VALUE).
+			body(updated).
+		when().
+			put("/api/employees/update/1").
+		then().
+			statusCode(200);
+
+		verify(employeeService, times(1)).
+			saveEmployee(updated);
+	}
+
+	@Test
+	public void testUpdateEmployeeWithFakeId() throws Exception {
+		// although we pass an Employee in the body with id 100...
+		Employee updated = new Employee(100L, "test", 1000);
+		given().
+			contentType(MediaType.APPLICATION_JSON_VALUE).
+			body(updated).
+		when().
+			// the id specified in the URL...
+			put("/api/employees/update/1").
+		then().
+			statusCode(200);
+
+		// has the precedence
+		verify(employeeService, times(1)).
+			saveEmployee(new Employee(1L, "test", 1000));
+	}
+
+	@Test
+	public void testDeleteEmployee() throws Exception {
+		given().
+		when().
+			delete("/api/employees/delete/1").
+		then().
+			statusCode(200);
+
+		verify(employeeService, times(1)).
+			delete(1L);
+	}
 }
