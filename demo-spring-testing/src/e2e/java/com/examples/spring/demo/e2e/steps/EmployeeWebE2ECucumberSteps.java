@@ -34,7 +34,8 @@ public class EmployeeWebE2ECucumberSteps {
 
 	private WebDriver webDriver;
 
-	private static int port = 8080;
+	private static int port =
+		Integer.parseInt(System.getProperty("server.port", "8080"));
 
 	private static String url = "http://localhost:" + port;
 
