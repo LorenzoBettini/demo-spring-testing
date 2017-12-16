@@ -13,4 +13,5 @@ install: true
 script:
  - cd demo-spring-testing
  - ./mvnw clean verify -Pjacoco coveralls:report
+ - ./mvnw verify -Pe2e-tests
 
