@@ -4,6 +4,14 @@ language: java
 
 jdk: oraclejdk8
 
+addons:
+  sonarcloud:
+    branches:
+      - sonarcloud
+    organization: "lorenzobettini-github"
+    token:
+      secure: "E1QRRGdZeBwy0isOWt2/8k5yWNwBxI0JIonA7OhjUvAUZ/CQ1wGQW8SaxK4fmEln7oRiog9QKnxdUVsvmSBD9u05Gu0J8avXcFohBk2mO3hq+t1pH991priqU07Ga4OO7OpsfmMYsHOJ1X5LNAmsvgyXg5PbgKXwg4JFYaX+9QotUgVOCFdZhWv2EQATzOhN+XD21f7H0vuQk+A5PUaXS1VuwJ9aTMpf681HyLIUlImQpaZlsV/VuK+SxR+jSrSZbdd9H6B8ZpyMNB3Mh3zSMBogTlHeixbUFtpocnyHj5fUTQsrFUe6u86Hsv0CqEnuVEuQpipZUIxrcJLJ0riexqXv1ksNnX7olbO1kGml3deT5QUWsvoV0q7wMCysvuX01jV+f23rnfPzyMYVb3zGmU4HrlnbNhe/GtC0c/rGUFhTQam4l8AVFMUQxFYju9dJVMtFLDao1LxCgQN71NaHTL/mX7Uzf0uL1i4aBItt8HldPONb8AeVGffxAl3LZ53tBvdBHP+XoQlsxSiBEoeu5H3Ie9Lsvp5/PW25o36An1fzBLtutw1dXidTVMXiS/4UAmTou6TepZVO5xG0piT2a0Ag4JpSLOm7IZ/OJAktZA/YjZIOVlycpdA1eObRLCce2WRA3CHHxkagjZvoFElOuFcwP6lVy0VEpXbyhic9d/A="
+
 cache:
   directories:
   - $HOME/.m2
@@ -12,5 +20,5 @@ install: true
 
 script:
  - cd demo-spring-testing
- - ./mvnw clean verify -Pjacoco coveralls:report
+ - ./mvnw clean verify -Pjacoco coveralls:report sonar:sonar
 
