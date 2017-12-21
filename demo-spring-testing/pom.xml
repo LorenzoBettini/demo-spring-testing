@@ -25,7 +25,10 @@
     <jacoco.version>0.7.9</jacoco.version>
     <cucumber.version>1.2.5</cucumber.version>
     <!-- Also collects integration tests -->
-    <sonar.junit.reportPaths>${project.build.directory}/surefire-reports,${project.build.directory}/failsafe-reports</sonar.junit.reportPaths>
+    <sonar.junit.reportPaths>
+      ${project.build.directory}/surefire-reports,
+      ${project.build.directory}/failsafe-reports
+    </sonar.junit.reportPaths>
   </properties>
 
   <dependencies>
