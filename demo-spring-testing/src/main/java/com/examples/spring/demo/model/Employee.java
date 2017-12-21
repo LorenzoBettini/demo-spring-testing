@@ -83,9 +83,7 @@ public class Employee {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (salary != other.salary)
-			return false;
-		return true;
+		return salary == other.salary;
 	}
 
 }
