@@ -35,6 +35,11 @@
       ${project.build.sourceDirectory},
       ${basedir}/src/main/resources
     </sonar.sources>
+    <!-- Exclude non covered files -->
+    <sonar.coverage.exclusions>
+      **/*Application.*,
+      **/model/*
+    </sonar.coverage.exclusions>
   </properties>
 
   <dependencies>
