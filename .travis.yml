@@ -31,7 +31,6 @@ before_script:
 script:
  - export
  - cd demo-spring-testing
- - ./mvnw clean verify -Pjacoco coveralls:report
- - ./mvnw sonar:sonar
+ - ./mvnw clean verify -Pjacoco coveralls:report sonar:sonar
  - ./mvnw verify -Pe2e-tests
 
