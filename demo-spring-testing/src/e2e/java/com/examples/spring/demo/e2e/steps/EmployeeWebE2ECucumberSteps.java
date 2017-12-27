@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,6 +22,7 @@ import com.examples.spring.demo.controllers.webdriver.pages.EditPage;
 import com.examples.spring.demo.controllers.webdriver.pages.HomePage;
 import com.examples.spring.demo.model.Employee;
 
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -66,9 +67,18 @@ public class EmployeeWebE2ECucumberSteps {
 		AbstractPage.port = port;
 		savedEmployees = new ArrayList<>();
 		restTemplate = new RestTemplate();
-		webDriver = new HtmlUnitDriver();
+		webDriver = new ChromeDriver();
 		LOGGER.info("Port set: " + port);
 		LOGGER.info("URL: " + url);
+	}
+
+	/**
+	 * NOTE: it's {@link cucumber.api.java.After}, NOT {@link org.junit.After},
+	 * which is not processed by Cucumber.
+	 */
+	@After
+	public void tearDown() {
+		webDriver.quit();
 	}
 
 	private void logAllEmployees() {
@@ -102,9 +112,11 @@ public class EmployeeWebE2ECucumberSteps {
 	@Then("^A table must show the employees$")
 	public void aTableMustShowTheEmployees() throws Throwable {
 		assertThat(homePage.getEmployeeTableAsString()).contains(
-			+ savedEmployees.get(0).getId()
-			+ " test1 1000 "
-			+ savedEmployees.get(1).getId()
+			savedEmployees.get(0).getId()
+			+ " test1 1000"
+		);
+		assertThat(homePage.getEmployeeTableAsString()).contains(
+			savedEmployees.get(1).getId()
 			+ " test2 2000"
 		);
 	}
@@ -155,7 +167,8 @@ public class EmployeeWebE2ECucumberSteps {
 	@And("^A table must show the added Employee with name \"([^\"]*)\", salary \"([^\"]*)\" and id is positive$")
 	public void aTableMustShowTheAddedEmployeeWithNameSalaryAndIdIsPositive(String name, String salary) throws Throwable {
 		assertThat(homePage.getEmployeeTableAsString()).
-			matches(".*([1-9][0-9]*) " + name + " " + salary);
+			matches("(?s).*([1-9][0-9]*) " + name + " " + salary);
+		// (?s) for "single line mode" makes the dot match all characters, including line breaks.
 	}
 
 	private void postEmployee(String name, int salary) throws JSONException {
