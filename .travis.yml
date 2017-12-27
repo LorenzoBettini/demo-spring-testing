@@ -22,7 +22,16 @@ cache:
 
 install: true
 
+env:
+ - DISPLAY=:99.0
+
+before_script:
+ - sh -e /etc/init.d/xvfb start
+
 script:
+ - export
  - cd demo-spring-testing
- - ./mvnw clean verify -Pjacoco coveralls:report sonar:sonar
+ - ./mvnw clean verify -Pjacoco coveralls:report
+ - ./mvnw verify -Pe2e-tests
+ - ./mvnw sonar:sonar
 

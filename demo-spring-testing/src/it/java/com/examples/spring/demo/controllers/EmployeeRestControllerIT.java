@@ -1,6 +1,7 @@
 package com.examples.spring.demo.controllers;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.examples.spring.demo.model.Employee;
@@ -47,6 +49,10 @@ public class EmployeeRestControllerIT {
 		url = "http://localhost:" + port;
 		employeeRepository.deleteAll();
 		employeeRepository.flush();
+		showCurrentEmployeesOnTheLog();
+	}
+
+	private void showCurrentEmployeesOnTheLog() {
 		LOGGER.info("employees: " + employeeRepository.findAll());
 	}
 
@@ -57,7 +63,7 @@ public class EmployeeRestControllerIT {
 				new Employee(null, "second", 5000)
 			));
 		employeeRepository.flush();
-		LOGGER.info("employees: " + employeeRepository.findAll());
+		showCurrentEmployeesOnTheLog();
 
 		given().
 		when().
@@ -85,7 +91,7 @@ public class EmployeeRestControllerIT {
 		Employee saved = employeeRepository.save(
 			new Employee(null, "first", 1000));
 		employeeRepository.flush();
-		LOGGER.info("employees: " + employeeRepository.findAll());
+		showCurrentEmployeesOnTheLog();
 
 		given().
 		when().
@@ -102,7 +108,7 @@ public class EmployeeRestControllerIT {
 
 	@Test
 	public void testFindByIdWithNonExistingEmployee() throws Exception {
-		LOGGER.info("employees: " + employeeRepository.findAll());
+		showCurrentEmployeesOnTheLog();
 
 		given().
 		when().
@@ -110,5 +116,88 @@ public class EmployeeRestControllerIT {
 		then().
 			statusCode(200).
 			contentType(isEmptyOrNullString());
+	}
+
+	@Test
+	public void testNewEmployee() throws Exception {
+		given().
+			contentType(MediaType.APPLICATION_JSON_VALUE).
+			body(new Employee(null, "test", 1000)).
+		when().
+			post(url + "/api/employees/new").
+		then().
+			statusCode(200);
+
+		showCurrentEmployeesOnTheLog();
+		assertThat(employeeRepository.findAll().toString())
+			.matches(
+				"\\[Employee \\[id=([1-9][0-9]*), name=test, salary=1000\\]\\]");
+	}
+
+	@Test
+	public void testUpdateEmployee() throws Exception {
+		Employee saved = employeeRepository.save(
+				new Employee(null, "first", 100));
+		employeeRepository.flush();
+		showCurrentEmployeesOnTheLog();
+		// the body for the update does not contain "id"
+		Employee updated = new Employee(null, "test", 1000);
+
+		given().
+			contentType(MediaType.APPLICATION_JSON_VALUE).
+			body(updated).
+		when().
+			put(url + "/api/employees/update/" + saved.getId()).
+		then().
+			statusCode(200);
+
+		assertThat(employeeRepository.findAll().toString())
+			.isEqualTo(
+				"[Employee [id="
+				+ saved.getId()
+				+ ", name=test, salary=1000]]");
+	}
+
+	@Test
+	public void testUpdateEmployeeWithFakeId() throws Exception {
+		Employee saved = employeeRepository.save(
+				new Employee(null, "first", 100));
+		employeeRepository.flush();
+		showCurrentEmployeesOnTheLog();
+
+		// although we pass an Employee in the body with id 100...
+		Employee updated = new Employee(100L, "test", 1000);
+		given().
+			contentType(MediaType.APPLICATION_JSON_VALUE).
+			body(updated).
+		when().
+			// the id specified in the URL...
+			put(url + "/api/employees/update/" + saved.getId()).
+		then().
+			statusCode(200);
+
+		// has the precedence
+		assertThat(employeeRepository.findAll().toString())
+			.isEqualTo(
+				"[Employee [id="
+				+ saved.getId()
+				+ ", name=test, salary=1000]]");
+	}
+
+	@Test
+	public void testDeleteEmployee() throws Exception {
+		Employee saved = employeeRepository.save(
+				new Employee(null, "first", 100));
+		employeeRepository.flush();
+		showCurrentEmployeesOnTheLog();
+
+		given().
+		when().
+			delete(url + "/api/employees/delete/" + saved.getId()).
+		then().
+			statusCode(200);
+
+		assertThat(employeeRepository.findAll())
+			.isEmpty();
 	}
 }
