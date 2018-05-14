@@ -29,6 +29,7 @@ install: true
 
 env:
  - DISPLAY=:99.0
+ - CHROME_BIN=/usr/bin/google-chrome
 
 before_script:
  - sh -e /etc/init.d/xvfb start
