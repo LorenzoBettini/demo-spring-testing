@@ -17,6 +17,39 @@
 
   <properties>
     <java.version>1.8</java.version>
+
+    <!-- For SonarQube -->
+    <sonar.coverage.jacoco.xmlReportPaths>
+      ${project.reporting.outputDirectory}/jacoco/jacoco.xml
+    </sonar.coverage.jacoco.xmlReportPaths>
+    <!-- Also collects integration tests -->
+    <sonar.junit.reportPaths>
+      ${project.build.directory}/surefire-reports,
+      ${project.build.directory}/failsafe-reports
+    </sonar.junit.reportPaths>
+    <!-- Also scans HTML files -->
+    <sonar.sources>
+      pom.xml,
+      ${project.build.sourceDirectory},
+      ${basedir}/src/main/resources
+    </sonar.sources>
+    <!-- Exclude non covered files -->
+    <sonar.coverage.exclusions>
+      **/*Application.*,
+      **/model/*
+    </sonar.coverage.exclusions>
+    <!-- For each rule to be ignore, add another eXX and two corresponding 
+      properties with eXX in the name as below -->
+    <sonar.issue.ignore.multicriteria>e11</sonar.issue.ignore.multicriteria>
+    <!-- "Tests should include assertions" disabled on some classes like 
+      *ApplicationTests which just checks that the Spring application can start, 
+      without any assertion -->
+    <sonar.issue.ignore.multicriteria.e11.ruleKey>
+      java:S2699
+    </sonar.issue.ignore.multicriteria.e11.ruleKey>
+    <sonar.issue.ignore.multicriteria.e11.resourceKey>
+      **/*ApplicationTests.java
+    </sonar.issue.ignore.multicriteria.e11.resourceKey>
   </properties>
 
   <dependencies>
@@ -106,6 +139,77 @@
         </executions>
       </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.6</version>
+          <configuration>
+            <excludes>
+              <exclude>**/*Application.*</exclude>
+              <exclude>**/model/*</exclude>
+            </excludes>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <!-- binds by default to the phase "initialize" -->
+                <goal>prepare-agent</goal>
+                <!-- binds by default to the phase "verify" -->
+                <goal>report</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <!-- You must run coveralls:report explicitly -->
+        <plugin>
+          <groupId>org.eluder.coveralls</groupId>
+          <artifactId>coveralls-maven-plugin</artifactId>
+          <version>4.3.0</version>
+          <dependencies>
+            <!-- This is required when using JDK 9 or higher
+              since javax.xml.bind has been removed from the JDK -->
+            <dependency>
+              <groupId>javax.xml.bind</groupId>
+              <artifactId>jaxb-api</artifactId>
+              <version>2.3.1</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>3.8.0.2131</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
+  <profiles>
+    <profile>
+      <id>jacoco</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <configuration>
+              <!-- Don't use the default property so that we'll do code 
+                coverage only for surefire tests (not for failsafe) -->
+              <propertyName>surefireArgLine</propertyName>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <!-- Code coverage for surefire tests only -->
+              <argLine>${surefireArgLine}</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
