@@ -55,4 +55,27 @@ public class EmployeeRestControllerTest {
 				.andExpect(jsonPath("$[1].salary", is(5000)));
 	}
 
+	@Test
+	public void testOneEmployeeByIdWithExistingEmployee() throws Exception {
+		when(employeeService.getEmployeeById(anyLong())).
+			thenReturn(new Employee(1L, "first", 1000));
+		this.mvc.perform(get("/api/employees/1")
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id", is(1)))
+				.andExpect(jsonPath("$.name", is("first")))
+				.andExpect(jsonPath("$.salary", is(1000)));
+	}
+
+	@Test
+	public void testOneEmployeeByIdWithNotFoundEmployee() throws Exception {
+		when(employeeService.getEmployeeById(anyLong())).
+			thenReturn(null);
+		this.mvc.perform(get("/api/employees/1")
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().string(""));
+				// the above checks that the content is empty
+				// which is different from an empty JSON list
+	}
 }
