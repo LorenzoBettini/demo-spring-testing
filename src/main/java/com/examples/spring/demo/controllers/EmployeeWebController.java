@@ -14,14 +14,18 @@ import com.examples.spring.demo.services.EmployeeService;
 @Controller
 public class EmployeeWebController {
 
+	private static final String MESSAGE_ATTRIBUTE = "message";
+	private static final String EMPLOYEE_ATTRIBUTE = "employee";
+	private static final String EMPLOYEES_ATTRIBUTE = "employees";
+
 	@Autowired
 	private EmployeeService employeeService;
 
 	@GetMapping("/")
 	public String index(Model model) {
 		List<Employee> allEmployees = employeeService.getAllEmployees();
-		model.addAttribute("employees", allEmployees);
-		model.addAttribute("message",
+		model.addAttribute(EMPLOYEES_ATTRIBUTE, allEmployees);
+		model.addAttribute(MESSAGE_ATTRIBUTE,
 			allEmployees.isEmpty() ? "No employee" :  "");
 		return "index";
 	}
@@ -29,16 +33,16 @@ public class EmployeeWebController {
 	@GetMapping("/edit/{id}")
 	public String editEmployee(@PathVariable long id, Model model) {
 		Employee employeeById = employeeService.getEmployeeById(id);
-		model.addAttribute("employee", employeeById);
-		model.addAttribute("message",
+		model.addAttribute(EMPLOYEE_ATTRIBUTE, employeeById);
+		model.addAttribute(MESSAGE_ATTRIBUTE,
 			employeeById == null ? "No employee found with id: " + id : "");
 		return "edit";
 	}
 
 	@GetMapping("/new")
 	public String newEmployee(Model model) {
-		model.addAttribute("employee", new Employee());
-		model.addAttribute("message", "");
+		model.addAttribute(EMPLOYEE_ATTRIBUTE, new Employee());
+		model.addAttribute(MESSAGE_ATTRIBUTE, "");
 		return "edit";
 	}
 
