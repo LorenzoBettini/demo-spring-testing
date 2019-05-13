@@ -94,4 +94,13 @@ public class EmployeeWebControllerTest {
 			.andExpect(model().attribute("employee", nullValue()))
 			.andExpect(model().attribute("message", "No employee found with id: 1"));
 	}
+
+	@Test
+	public void test_EditNewEmployee() throws Exception {
+		mvc.perform(get("/new"))
+			.andExpect(view().name("edit"))
+			.andExpect(model().attribute("employee", new Employee()))
+			.andExpect(model().attribute("message", ""));
+		verifyZeroInteractions(employeeService);
+	}
 }
