@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.examples.spring.demo.model.Employee;
 import com.examples.spring.demo.services.EmployeeService;
@@ -46,4 +47,14 @@ public class EmployeeWebController {
 		return "edit";
 	}
 
+	@PostMapping("/save")
+	public String saveEmployee(Employee employee) {
+		final Long id = employee.getId();
+		if (id == null) {
+			employeeService.insertNewEmployee(employee);
+		} else {
+			employeeService.updateEmployeeById(id, employee);
+		}
+		return "redirect:/";
+	}
 }
