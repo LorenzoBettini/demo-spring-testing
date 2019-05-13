@@ -3,6 +3,7 @@ package com.examples.spring.demo.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,5 +48,22 @@ public class EmployeeRepositoryTest {
 			persistFlushFind(new Employee(null, "test", 1000));
 		Employee found = repository.findByName("test");
 		assertThat(found).isEqualTo(saved);
+	}
+
+	@Test
+	public void test_findByNameAndSalary() {
+		entityManager.persistFlushFind(new Employee(null, "test", 1000));
+		Employee e = entityManager.persistFlushFind(new Employee(null, "test", 2000));
+		List<Employee> found = repository.findByNameAndSalary("test", 2000L);
+		assertThat(found).containsExactly(e);
+	}
+
+	@Test
+	public void test_findByNameOrSalary() {
+		Employee e1 = entityManager.persistFlushFind(new Employee(null, "test", 1000));
+		Employee e2 = entityManager.persistFlushFind(new Employee(null, "another", 2000));
+		entityManager.persistFlushFind(new Employee(null, "shouldn't match", 3000));
+		List<Employee> found = repository.findByNameOrSalary("test", 2000L);
+		assertThat(found).containsExactly(e1, e2);
 	}
 }
