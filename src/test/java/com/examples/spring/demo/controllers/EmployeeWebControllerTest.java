@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -53,6 +54,21 @@ public class EmployeeWebControllerTest {
 		mvc.perform(get("/"))
 			.andExpect(view().name("index"))
 			.andExpect(model().attribute("employees",
-				 employees));
+				employees))
+			.andExpect(model().attribute("message",
+					""));
+	}
+
+	@Test
+	public void test_HomeView_ShowsMessageWhenThereAreNoEmployees() throws Exception {
+		when(employeeService.getAllEmployees())
+			.thenReturn(Collections.emptyList());
+
+		mvc.perform(get("/"))
+			.andExpect(view().name("index"))
+			.andExpect(model().attribute("employees",
+				Collections.emptyList()))
+			.andExpect(model().attribute("message",
+				"No employee"));
 	}
 }
