@@ -66,4 +66,13 @@ public class EmployeeRepositoryTest {
 		List<Employee> found = repository.findByNameOrSalary("test", 2000L);
 		assertThat(found).containsExactly(e1, e2);
 	}
+
+	@Test
+	public void test_findAllEmployeesWithLowSalary() {
+		Employee e1 = entityManager.persistFlushFind(new Employee(null, "test", 1000));
+		Employee e2 = entityManager.persistFlushFind(new Employee(null, "another", 2000));
+		entityManager.persistFlushFind(new Employee(null, "shouldn't match", 3000));
+		List<Employee> found = repository.findAllEmployeesWithLowSalary(2500L);
+		assertThat(found).containsExactly(e1, e2);
+	}
 }
