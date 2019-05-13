@@ -2,6 +2,7 @@ package com.examples.spring.demo.controllers;
 
 import static java.util.Arrays.asList;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.mockito.Mockito.*;
@@ -103,4 +104,26 @@ public class EmployeeWebControllerTest {
 			.andExpect(model().attribute("message", ""));
 		verifyZeroInteractions(employeeService);
 	}
+
+	@Test
+	public void test_PostEmployeeWithoutId_ShouldInsertNewEmployee() throws Exception {
+		mvc.perform(post("/save")
+				.param("name", "test name")
+				.param("salary", "1000"))
+			.andExpect(view().name("redirect:/")); // go back to the main page
+		verify(employeeService)
+			.insertNewEmployee(new Employee(null, "test name", 1000));
+	}
+
+	@Test
+	public void test_PostEmployeeWithId_ShouldUpdateExistingEmployee() throws Exception {
+		mvc.perform(post("/save")
+				.param("id", "1")
+				.param("name", "test name")
+				.param("salary", "1000"))
+			.andExpect(view().name("redirect:/")); // go back to the main page
+		verify(employeeService)
+			.updateEmployeeById(1L, new Employee(1L, "test name", 1000));
+	}
+
 }
