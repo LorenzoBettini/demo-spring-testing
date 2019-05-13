@@ -6,4 +6,6 @@ import com.examples.spring.demo.model.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
+	Employee findByName(String string);
+
 }
