@@ -3,6 +3,7 @@ package com.examples.spring.demo.controllers;
 import static java.util.Arrays.asList;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.mockito.Mockito.*;
 
 import java.util.Collections;
@@ -70,5 +71,27 @@ public class EmployeeWebControllerTest {
 				Collections.emptyList()))
 			.andExpect(model().attribute("message",
 				"No employee"));
+	}
+
+	@Test
+	public void test_EditEmployee_WhenEmployeeIsFound() throws Exception {
+		Employee employee = new Employee(1L, "test", 1000);
+
+		when(employeeService.getEmployeeById(1L)).thenReturn(employee);
+
+		mvc.perform(get("/edit/1"))
+			.andExpect(view().name("edit"))
+			.andExpect(model().attribute("employee", employee))
+			.andExpect(model().attribute("message", ""));
+	}
+
+	@Test
+	public void test_EditEmployee_WhenEmployeeIsNotFound() throws Exception {
+		when(employeeService.getEmployeeById(1L)).thenReturn(null);
+
+		mvc.perform(get("/edit/1"))
+			.andExpect(view().name("edit"))
+			.andExpect(model().attribute("employee", nullValue()))
+			.andExpect(model().attribute("message", "No employee found with id: 1"));
 	}
 }
