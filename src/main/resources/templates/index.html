@@ -12,6 +12,20 @@
   <!-- ELSE -->
   <div th:unless="${employees.empty}">
     <table id="employee_table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Salary</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="employee : ${employees}">
+          <td th:text="${employee.id}"></td>
+          <td th:text="${employee.name}"></td>
+          <td th:text="${employee.salary}"></td>
+        </tr>
+      </tbody>
     </table>
   </div>
 </body>
