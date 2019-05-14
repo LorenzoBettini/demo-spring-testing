@@ -58,12 +58,16 @@ public class EmployeeWebControllerHtmlUnitTest {
 		assertThat(page.getBody().getTextContent())
 			.doesNotContain("No employee");
 		HtmlTable table = page.getHtmlElementById("employee_table");
-		assertThat(table.asText())
+		assertThat(removeWindowsCR(table.asText()))
 			.isEqualTo(
 				"Employees\n" +
 				"ID	Name	Salary\n" +
 				"1	test1	1000\n" +
 				"2	test2	2000"
 			);
+	}
+
+	private String removeWindowsCR(String s) {
+		return s.replace("\r", "");
 	}
 }
