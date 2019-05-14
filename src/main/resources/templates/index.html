@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8"/>
 <title>Employees</title>
 </head>
 <body>
-No employee
+  <!-- IF NO EMPLOYEE -->
+  <div th:if="${employees.empty}">
+    <div>No employee</div>
+  </div>
+  <!-- ELSE -->
+  <div th:unless="${employees.empty}">
+    <table id="employee_table">
+    </table>
+  </div>
 </body>
 </html>
