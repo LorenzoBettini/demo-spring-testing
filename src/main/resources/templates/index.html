@@ -5,6 +5,9 @@
 <title>Employees</title>
 </head>
 <body>
+  <div>
+    <a th:href="@{/new}">New employee</a>
+  </div>
   <!-- IF NO EMPLOYEE -->
   <div th:if="${employees.empty}">
     <div>No employee</div>
