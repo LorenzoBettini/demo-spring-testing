@@ -74,9 +74,11 @@ public class EmployeeWebControllerHtmlUnitTest {
 			.isEqualTo(
 				"Employees\n" +
 				"ID	Name	Salary\n" +
-				"1	test1	1000\n" +
-				"2	test2	2000"
+				"1	test1	1000	Edit\n" +
+				"2	test2	2000	Edit"
 			);
+		page.getAnchorByHref("/edit/1");
+		page.getAnchorByHref("/edit/2");
 	}
 
 	@Test
