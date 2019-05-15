@@ -27,6 +27,7 @@
           <td th:text="${employee.id}"></td>
           <td th:text="${employee.name}"></td>
           <td th:text="${employee.salary}"></td>
+          <td><a th:href="@{'/edit/' + ${employee.id}}">Edit</a></td>
         </tr>
       </tbody>
     </table>
