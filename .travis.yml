@@ -15,5 +15,13 @@ cache:
   - $HOME/.m2
   - $HOME/.sonar/cache
 
+env:
+  - DISPLAY=:99.0
+
+before_script:
+ - sh -e /etc/init.d/xvfb start
+
 script:
-- ./mvnw clean verify -Pjacoco coveralls:report sonar:sonar
+- ./mvnw clean verify -Pjacoco
+- ./mvnw verify -Pe2e-tests
+- ./mvnw coveralls:report sonar:sonar
