@@ -1,9 +1,14 @@
 <configuration>
   <include
     resource="org/springframework/boot/logging/logback/base.xml" />
+
   <!-- WebDriverManager uses Apache HTTP Client to download WebDriver binaries 
     from online repositories. Internally, Apache HTTP client writes a lot of 
     logging information using the DEBUG level of org.apache.http classes. This 
     reduces this amount of logs. -->
   <logger name="org.apache.http" level="WARN" />
+
+  <!-- Enable debugging for our classes -->
+  <logger name="com.examples" level="debug" />
+
 </configuration>
