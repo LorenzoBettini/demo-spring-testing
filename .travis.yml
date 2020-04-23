@@ -11,6 +11,9 @@ addons:
   sonarcloud:
     organization: lorenzobettini-github
 
+services:
+  - xvfb
+
 install: true
 
 cache:
@@ -19,4 +22,6 @@ cache:
   - $HOME/.sonar/cache
 
 script:
-- ./mvnw clean verify -Pjacoco coveralls:report sonar:sonar
+- ./mvnw clean verify -Pjacoco
+- ./mvnw verify -Pe2e-tests
+- ./mvnw coveralls:report sonar:sonar
