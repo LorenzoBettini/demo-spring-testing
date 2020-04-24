@@ -22,6 +22,4 @@ cache:
   - $HOME/.sonar/cache
 
 script:
-- ./mvnw clean verify -Pjacoco
-- ./mvnw verify -Pe2e-tests
-- ./mvnw coveralls:report sonar:sonar
+- ./mvnw clean verify -Pjacoco && ./mvnw verify -Pe2e-tests && ./mvnw coveralls:report sonar:sonar
