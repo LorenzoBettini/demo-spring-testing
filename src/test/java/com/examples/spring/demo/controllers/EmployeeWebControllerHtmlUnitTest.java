@@ -72,6 +72,7 @@ public class EmployeeWebControllerHtmlUnitTest {
 		HtmlTable table = page.getHtmlElementById("employee_table");
 		assertThat(removeWindowsCR(table.asText()))
 			.isEqualTo(
+				"Employees\n" + 
 				"ID	Name	Salary\n" + 
 				"1	test1	1000	Edit\n" + 
 				"2	test2	2000	Edit"
