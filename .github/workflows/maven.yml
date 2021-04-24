@@ -20,6 +20,8 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
         restore-keys: ${{ runner.os }}-m2-
-    - name: Build with Maven
-      run: mvn verify
+    - name: Unit and Integration Tests
+      run: mvn verify -Pjacoco
+    - name: End-to-end tests
+      run: xvfb-run mvn verify -Pe2e-tests
 
