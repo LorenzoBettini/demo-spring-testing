@@ -27,7 +27,7 @@ public class EmployeeJpaTest {
 		assertThat(saved.getName()).isEqualTo("test");
 		assertThat(saved.getSalary()).isEqualTo(1000);
 		assertThat(saved.getId()).isNotNull();
-		assertThat(saved.getId()).isGreaterThan(0);
+		assertThat(saved.getId()).isPositive();
 		// just to see the generated identifier
 		LoggerFactory
 			.getLogger(EmployeeJpaTest.class)
