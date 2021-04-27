@@ -50,7 +50,7 @@
     </sonar.coverage.exclusions>
     <!-- For each rule to be ignore, add another eXX and two corresponding 
       properties with eXX in the name as below -->
-    <sonar.issue.ignore.multicriteria>e11</sonar.issue.ignore.multicriteria>
+    <sonar.issue.ignore.multicriteria>e11,e12</sonar.issue.ignore.multicriteria>
     <!-- "Tests should include assertions" disabled on some classes like 
       *ApplicationTests which just checks that the Spring application can start, 
       without any assertion -->
@@ -60,6 +60,15 @@
     <sonar.issue.ignore.multicriteria.e11.resourceKey>
       **/*ApplicationTests.java
     </sonar.issue.ignore.multicriteria.e11.resourceKey>
+    <!-- "Persistent entities should not be used as arguments of "@RequestMapping" methods",
+      https://rules.sonarsource.com/java/tag/spring/RSPEC-4684
+      in this simple project we ignore such a rule -->
+    <sonar.issue.ignore.multicriteria.e12.ruleKey>
+      java:S4684
+    </sonar.issue.ignore.multicriteria.e12.ruleKey>
+    <sonar.issue.ignore.multicriteria.e12.resourceKey>
+      **/*Controller.java
+    </sonar.issue.ignore.multicriteria.e12.resourceKey>
   </properties>
 
   <dependencies>
@@ -93,6 +102,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>spring-mock-mvc</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
