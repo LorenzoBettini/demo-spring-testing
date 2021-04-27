@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Employees</title>
+</head>
+<body>
+
+  <h1>Edit Employee</h1>
+
+  <div th:unless="${message.empty}">
+    <span th:text="${message}"></span>
+  </div>
+
+  <div th:if="${message.empty}">
+    <form name="employee_form" action="#" th:action="@{/save}"
+      th:object="${employee}" method="post">
+      <!-- The hidden field for the Employee's identifier 
+        will be sent together with the other values-->
+      <input type="hidden" th:field="*{id}" />
+      <p>
+        Name: <input type="text" th:field="*{name}" />
+      </p>
+      <p>
+        Salary: <input type="text" th:field="*{salary}" />
+      </p>
+      <button type="submit" name="btn_submit">Save</button>
+    </form>
+  </div>
+</body>
+</html>
