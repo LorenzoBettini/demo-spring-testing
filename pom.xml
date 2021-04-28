@@ -18,6 +18,9 @@
   <properties>
     <java.version>1.8</java.version>
 
+    <skip.unit-tests>false</skip.unit-tests>
+    <skip.integration-tests>false</skip.integration-tests>
+
     <!-- For SonarQube -->
     <sonar.coverage.jacoco.xmlReportPaths>
       ${project.reporting.outputDirectory}/jacoco/jacoco.xml
@@ -167,6 +170,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <skipTests>${skip.unit-tests}</skipTests>
           <includes>
             <include>**/*Test.java</include>
           </includes>
@@ -178,26 +182,11 @@
         <executions>
           <execution>
             <configuration>
+              <skipTests>${skip.integration-tests}</skipTests>
               <includes>
                 <include>**/*ApplicationTests.java</include>
                 <include>**/*IT.java</include>
               </includes>
-            </configuration>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>e2e</id>
-            <configuration>
-              <includes>
-                <include>**/*E2E.java</include>
-              </includes>
-              <excludes>
-                <exclude>>**/*ApplicationTests.java</exclude>
-                <exclude>**/*IT.java</exclude>
-              </excludes>
             </configuration>
             <goals>
               <goal>integration-test</goal>
@@ -274,6 +263,84 @@
             <configuration>
               <!-- Code coverage for surefire tests only -->
               <argLine>${surefireArgLine}</argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>e2e-tests</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <skip.unit-tests>true</skip.unit-tests>
+        <skip.integration-tests>true</skip.integration-tests>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>reserve-tomcat-port</id>
+                <goals>
+                  <goal>reserve-network-port</goal>
+                </goals>
+                <phase>process-resources</phase>
+                <configuration>
+                  <portNames>
+                    <portName>tomcat.http.port</portName>
+                  </portNames>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>pre-integration-test</id>
+                <goals>
+                  <goal>start</goal>
+                </goals>
+                <configuration>
+                  <arguments>
+                    <argument>--server.port=${tomcat.http.port}</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>post-integration-test</id>
+                <goals>
+                  <goal>stop</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>e2e-tests</id>
+                <configuration>
+                  <includes>
+                    <include>**/*E2E.java</include>
+                  </includes>
+                </configuration>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <systemPropertyVariables>
+                <server.port>${tomcat.http.port}</server.port>
+              </systemPropertyVariables>
             </configuration>
           </plugin>
         </plugins>
