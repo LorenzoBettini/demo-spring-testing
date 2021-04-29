@@ -34,6 +34,8 @@ jobs:
         -DpullRequest=${{ github.event.pull_request.number }}
       env: 
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+    - name: End-to-end tests
+      run: xvfb-run mvn verify -Pe2e-tests
     - name: SonarCloud
       run: >
         mvn sonar:sonar
