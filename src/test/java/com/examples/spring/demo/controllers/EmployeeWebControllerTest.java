@@ -102,7 +102,7 @@ public class EmployeeWebControllerTest {
 			.andExpect(view().name("edit"))
 			.andExpect(model().attribute("employee", new Employee()))
 			.andExpect(model().attribute("message", ""));
-		verifyZeroInteractions(employeeService);
+		verifyNoMoreInteractions(employeeService);
 	}
 
 	@Test
