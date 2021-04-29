@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.2.6.RELEASE</version>
+    <version>2.4.5</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.examples</groupId>
@@ -139,6 +139,23 @@
       <version>3.5.0</version>
       <scope>test</scope>
     </dependency>
+    <!-- https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing
+      JUnit 4 has been removed from spring-boot-starter-test
+      in new versions of Spring Boot, so we have to add the Jupiter vintage explicitly.
+      hamcrest-core is excluded in favor of org.hamcrest:hamcrest
+      that is part of spring-boot-starter-test
+    -->
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.hamcrest</groupId>
+          <artifactId>hamcrest-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
 
   <build>
@@ -206,6 +223,11 @@
             <excludes>
               <exclude>**/*Application.*</exclude>
               <exclude>**/model/*</exclude>
+              <!-- The following is just to avoid the instrumentation error
+                (when running EmployeeWebControllerTest) due to the
+                HtmlUnit class StyleAttributes$Definition
+                (method too large) -->
+              <exclude>**/htmlunit/*</exclude>
             </excludes>
           </configuration>
           <executions>
