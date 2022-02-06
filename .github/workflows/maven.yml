@@ -27,6 +27,7 @@ jobs:
         path: |
           ~/.m2
           ~/.sonar/cache
+          ~/.cache/selenium
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
         restore-keys: ${{ runner.os }}-m2-
     - name: Unit and Integration Tests
